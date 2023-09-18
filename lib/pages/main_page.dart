@@ -68,9 +68,9 @@ class _SignInState extends State<MainPage> {
               child: Column(
                 children: [
                   ShuttleMain(),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   MenuMain(),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   SchulMapMain()
                 ],
               ),

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:kustart/pages/main_page.dart';
 import 'firebase_options.dart';
 import 'pages/shuttle_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/menu_page.dart';
+
 
 void getMenu() async {
   Map<int, String> day = {
@@ -34,6 +36,7 @@ void main() async {
     statusBarColor: Colors.transparent, // 투명색
   ));
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('ko_KR', null);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

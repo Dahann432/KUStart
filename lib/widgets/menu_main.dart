@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class MenuMain extends StatefulWidget {
   const MenuMain({Key? key}) : super(key: key);
@@ -62,6 +63,10 @@ class _MenuMainState extends State<MenuMain> {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final dateFormat = DateFormat('yyyy.M.d (E)', 'ko_KR');
+    final formattedDate = dateFormat.format(now);
+
     return Container(
       height: 420,
       decoration: ShapeDecoration(
@@ -80,13 +85,13 @@ class _MenuMainState extends State<MenuMain> {
       ),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(16, 11, 0, 10),
+                padding: const EdgeInsets.fromLTRB(16, 11, 0, 10),
                 child: Text(
-                  '2023.9.3 (일)',
-                  style: TextStyle(
+                  formattedDate,
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 20,
                     fontFamily: 'Ubuntu',
@@ -117,7 +122,7 @@ class _MenuMainState extends State<MenuMain> {
         saveButtonColor(buttonNumber);
       },
       child: Container(
-        width: 105,
+        width: 95,
         height: 35,
         decoration: ShapeDecoration(
           color: buttonColor,

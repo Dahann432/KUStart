@@ -9,12 +9,11 @@ class ShuttleMain extends StatefulWidget {
 
 class _ShuttleMainState extends State<ShuttleMain> {
   var directionIcon = const Icon(Icons.east);
-  late Widget timeLine;
+  late Widget timeWidget = ToSchul();
 
   @override
   void initState() {
     super.initState();
-    timeLine = ToSchul(); // 초기값으로 ToSchul()을 설정
   }
 
   @override
@@ -60,10 +59,10 @@ class _ShuttleMainState extends State<ShuttleMain> {
                       // Toggle the container color
                       if (directionIcon.icon == Icons.east) {
                         directionIcon = const Icon(Icons.west);
-                        timeLine = ToStation();
+                        timeWidget = ToStation();
                       } else {
                         directionIcon = const Icon(Icons.east);
-                        timeLine = ToSchul();
+                        timeWidget = ToSchul();
                       }
                     });
                   },
@@ -100,11 +99,11 @@ class _ShuttleMainState extends State<ShuttleMain> {
                 ),
                 const SizedBox(width: 15)
               ]),
-              timeLine    // 시간 나타내기
+              timeWidget // 시간 위젯
             ],
           ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 20),
         Container(
           height: 20,
           decoration: ShapeDecoration(
@@ -129,7 +128,7 @@ class _ShuttleMainState extends State<ShuttleMain> {
 
 //조치원역 방향 셔틀
 class ToStation extends StatefulWidget {
-  const ToStation({super.key});
+  const ToStation({Key? key});
 
   @override
   State<ToStation> createState() => _ToStationState();
@@ -140,6 +139,7 @@ class _ToStationState extends State<ToStation> {
   late Timer timer;
   String remainingTime = '00:00';
 
+  // 시간표 정보
   final Map<int, List<int>> schedule = {
     8: [50],
     9: [10, 30, 40, 50],
@@ -156,13 +156,39 @@ class _ToStationState extends State<ToStation> {
     20: [0, 30, 50],
   };
 
+  @override
+  void initState() {
+    super.initState();
+    updateRemainingTime();
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      now = DateTime.now();
+      updateRemainingTime();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   void updateRemainingTime() {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (remainingDuration.inSeconds <= 0) {
-      remainingTime = '방금 출발쓰';
-      timer.cancel();
+    if (schedule.isEmpty || isScheduleOver()) {
+      setState(() {
+        remainingTime = '운행 종료';
+      });
+    } else if (remainingDuration.inHours >= 1) {
+      int hours = remainingDuration.inHours;
+      setState(() {
+        remainingTime = '$hours 시간 남음';
+      });
+    } else if (remainingDuration.inSeconds < 60) {
+      setState(() {
+        remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
+      });
     } else {
       String formattedRemainingTime =
           '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
@@ -170,6 +196,19 @@ class _ToStationState extends State<ToStation> {
         remainingTime = formattedRemainingTime;
       });
     }
+  }
+
+  bool isScheduleOver() {
+    if (schedule.isEmpty) return true;
+
+    int lastKey = schedule.keys.reduce((a, b) => a > b ? a : b);
+    int lastValue = schedule[lastKey]?.reduce((a, b) => a > b ? a : b) ?? 0;
+
+    int currentHour = now.hour;
+    int currentMinute = now.minute;
+
+    return currentHour > lastKey ||
+        (currentHour == lastKey && currentMinute > lastValue);
   }
 
   DateTime calculateNextTime() {
@@ -208,31 +247,17 @@ class _ToStationState extends State<ToStation> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    updateRemainingTime();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      now = DateTime.now();
-      updateRemainingTime();
-    });
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Text(remainingTime,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 70,
-          fontFamily: 'Inter',
-          fontWeight: FontWeight.w800,
-          height: 0,
-        ));
+    return Text(
+      remainingTime,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 70,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+        height: 0,
+      ),
+    );
   }
 }
 
@@ -266,13 +291,39 @@ class _ToSchulState extends State<ToSchul> {
     21: [0],
   };
 
+  @override
+  void initState() {
+    super.initState();
+    updateRemainingTime();
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      now = DateTime.now();
+      updateRemainingTime();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   void updateRemainingTime() {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (remainingDuration.inSeconds <= 0) {
-      remainingTime = '방금 출발쓰';
-      timer.cancel();
+    if (schedule.isEmpty || isScheduleOver()) {
+      setState(() {
+        remainingTime = '운행 종료';
+      });
+    } else if (remainingDuration.inHours >= 1) {
+      int hours = remainingDuration.inHours;
+      setState(() {
+        remainingTime = '$hours 시간 남음';
+      });
+    } else if (remainingDuration.inSeconds < 60) {
+      setState(() {
+        remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
+      });
     } else {
       String formattedRemainingTime =
           '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
@@ -280,6 +331,19 @@ class _ToSchulState extends State<ToSchul> {
         remainingTime = formattedRemainingTime;
       });
     }
+  }
+
+  bool isScheduleOver() {
+    if (schedule.isEmpty) return true;
+
+    int lastKey = schedule.keys.reduce((a, b) => a > b ? a : b);
+    int lastValue = schedule[lastKey]?.reduce((a, b) => a > b ? a : b) ?? 0;
+
+    int currentHour = now.hour;
+    int currentMinute = now.minute;
+
+    return currentHour > lastKey ||
+        (currentHour == lastKey && currentMinute > lastValue);
   }
 
   DateTime calculateNextTime() {
@@ -318,30 +382,17 @@ class _ToSchulState extends State<ToSchul> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    updateRemainingTime();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      now = DateTime.now();
-      updateRemainingTime();
-    });
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Text(remainingTime,
-        style: const TextStyle(
-            color: Colors.black,
-            fontSize: 70,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w800,
-            height: 0));
+    return Text(
+      remainingTime,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 70,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+        height: 0,
+      ),
+    );
   }
 }
 

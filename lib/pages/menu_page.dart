@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kustart/responsive/breakpoint.dart';
 import 'package:kustart/responsive/responsive_center.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -116,6 +117,10 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
 
+    final now = DateTime.now();
+    final dateFormat = DateFormat('yyyy.MM.dd (E)', 'ko_KR');
+    final formattedDate = dateFormat.format(now);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -182,12 +187,12 @@ class _MenuPageState extends State<MenuPage> {
                                     style: TextStyle(color: Colors.white)),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                               child: Text(
-                                '2023.09.13 (일)',
+                                formattedDate,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
                                   fontFamily: 'Inter',
@@ -432,7 +437,7 @@ class _MenuPageState extends State<MenuPage> {
         saveButtonColor(menuButtonNumber);
       },
       child: Container(
-        width: 105,
+        width: 95,
         height: 35,
         decoration: ShapeDecoration(
           color: menuButtonColor,
