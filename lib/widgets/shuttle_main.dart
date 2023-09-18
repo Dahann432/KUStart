@@ -9,7 +9,13 @@ class ShuttleMain extends StatefulWidget {
 
 class _ShuttleMainState extends State<ShuttleMain> {
   var directionIcon = const Icon(Icons.east);
-  var timeLine = ToSchul().toString();
+  late Widget timeLine;
+
+  @override
+  void initState() {
+    super.initState();
+    timeLine = ToSchul(); // 초기값으로 ToSchul()을 설정
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +60,10 @@ class _ShuttleMainState extends State<ShuttleMain> {
                       // Toggle the container color
                       if (directionIcon.icon == Icons.east) {
                         directionIcon = const Icon(Icons.west);
-                        timeLine = ToStation().toString();
+                        timeLine = ToStation();
                       } else {
                         directionIcon = const Icon(Icons.east);
-                        timeLine = ToSchul().toString();
+                        timeLine = ToSchul();
                       }
                     });
                   },
@@ -94,7 +100,7 @@ class _ShuttleMainState extends State<ShuttleMain> {
                 ),
                 const SizedBox(width: 15)
               ]),
-              Text(timeLine)     // 시간 나타내기
+              timeLine    // 시간 나타내기
             ],
           ),
         ),
