@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1070117292933",
+    "firebase_url": "https://kustart-8006c-default-rtdb.firebaseio.com",
+    "project_id": "kustart-8006c",
+    "storage_bucket": "kustart-8006c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070117292933:android:a1a0db82aa1b2fae6652ec",
+        "android_client_info": {
+          "package_name": "com.example.kustart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuZNGlCDbeopmrbG4dZ6TC3ijrUw4Pk7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
