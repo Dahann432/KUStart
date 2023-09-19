@@ -9,7 +9,7 @@ class ShuttleMain extends StatefulWidget {
 
 class _ShuttleMainState extends State<ShuttleMain> {
   var directionIcon = const Icon(Icons.east);
-  late Widget timeWidget = ToSchul();
+  late Widget timeWidget = ToCampus();
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _ShuttleMainState extends State<ShuttleMain> {
                         timeWidget = ToStation();
                       } else {
                         directionIcon = const Icon(Icons.east);
-                        timeWidget = ToSchul();
+                        timeWidget = ToCampus();
                       }
                     });
                   },
@@ -262,14 +262,14 @@ class _ToStationState extends State<ToStation> {
 }
 
 // 고려대 방향 셔틀
-class ToSchul extends StatefulWidget {
-  ToSchul({Key? key}) : super(key: key);
+class ToCampus extends StatefulWidget {
+  ToCampus({Key? key}) : super(key: key);
 
   @override
-  _ToSchulState createState() => _ToSchulState();
+  _ToCampusState createState() => _ToCampusState();
 }
 
-class _ToSchulState extends State<ToSchul> {
+class _ToCampusState extends State<ToCampus> {
   DateTime now = DateTime.now();
   late Timer timer;
   String remainingTime = '00:00';

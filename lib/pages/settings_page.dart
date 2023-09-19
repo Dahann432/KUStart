@@ -50,6 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
         color: Colors.white,
         height: screenHeight,
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: ResponsiveCenter(
             maxContentWidth: BreakPoint.tablet,
             padding: const EdgeInsets.all(20),

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kustart/responsive/responsive_center.dart';
 import 'package:kustart/responsive/breakpoint.dart';
-import 'menu_page.dart';
-import 'settings_page.dart';
-import 'shuttle_page.dart';
 import 'package:kustart/widgets/shuttle_main.dart';
 import 'package:kustart/widgets/menu_main.dart';
-import 'package:kustart/widgets/schulmap_main.dart';
+import 'package:kustart/widgets/campusmap_main.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -61,6 +58,7 @@ class _SignInState extends State<MainPage> {
         color: Colors.white,
         height: screenHeight,
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: ResponsiveCenter(
             maxContentWidth: BreakPoint.tablet,
             padding: const EdgeInsets.all(20),
@@ -71,7 +69,7 @@ class _SignInState extends State<MainPage> {
                   const SizedBox(height: 20),
                   MenuMain(),
                   const SizedBox(height: 20),
-                  SchulMapMain()
+                  CampusMapMain()
                 ],
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kustart/pages/main_page.dart';
+import 'package:kustart/pages/campusmap_page.dart';
 import 'firebase_options.dart';
 import 'pages/shuttle_page.dart';
 import 'pages/settings_page.dart';
@@ -54,7 +55,8 @@ class MyApp extends StatelessWidget {
         '/home': (context) => MainPage(),
         '/settings': (context) => SettingsPage(),
         '/menu' : (context) => MenuPage(),
-        '/shuttle' : (context) => ShuttlePage()
+        '/shuttle' : (context) => ShuttlePage(),
+        '/campusmap' : (context) => CampusmapPage()
       },
     );
   }

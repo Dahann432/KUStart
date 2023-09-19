@@ -125,7 +125,7 @@ class _MenuPageState extends State<MenuPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        elevation: 0,
+        elevation: 0.5,
         title: const Text(
           '식단표',
           textAlign: TextAlign.center,
@@ -151,6 +151,7 @@ class _MenuPageState extends State<MenuPage> {
         color: Colors.white,
         height: screenHeight,
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: ResponsiveCenter(
             maxContentWidth: BreakPoint.tablet,
             padding: const EdgeInsets.all(20),

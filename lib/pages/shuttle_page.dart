@@ -11,7 +11,7 @@ class ShuttlePage extends StatefulWidget {
 
 class _ShuttlePageState extends State<ShuttlePage> {
   var directionIcon = const Icon(Icons.east);
-  late Widget timelineWidget = buildShuttleTimeline(scheduleToSchul);
+  late Widget timelineWidget = buildShuttleTimeline(scheduleToCampus);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        elevation: 0,
+        elevation: 0.5,
         title: const Text(
           '셔틀버스',
           textAlign: TextAlign.center,
@@ -48,6 +48,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
         color: Colors.white,
         height: screenHeight,
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: ResponsiveCenter(
             maxContentWidth: BreakPoint.tablet,
             padding: const EdgeInsets.all(20),
@@ -77,7 +78,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
                             timelineWidget = buildShuttleTimeline(scheduleToStation);
                           } else {
                             directionIcon = Icon(Icons.east);
-                            timelineWidget = buildShuttleTimeline(scheduleToSchul);
+                            timelineWidget = buildShuttleTimeline(scheduleToCampus);
                           }
                         });
                       },
@@ -209,7 +210,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
   };
 
   // 고려대 방향 시간표
-  final Map<int, List<int>> scheduleToSchul = {
+  final Map<int, List<int>> scheduleToCampus = {
     8: [20, 30, 40, 50],
     9: [0, 20, 40, 50],
     10: [0, 20, 40, 50],
@@ -324,7 +325,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
                 ],
               ),
             ),
-            const SizedBox(height: 5)
+            const SizedBox(height: 15)
           ],
         ),
       );
