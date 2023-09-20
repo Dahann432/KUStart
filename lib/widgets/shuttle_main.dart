@@ -311,7 +311,7 @@ class _ToCampusState extends State<ToCampus> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (schedule.isEmpty || isScheduleOver()) {
+    if (isScheduleOver()) {
       setState(() {
         remainingTime = '운행 종료';
       });

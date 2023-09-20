@@ -150,7 +150,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
                       ),
                     ),
                   ),
-                  timelineWidget
+                  timelineWidget,
                 ],
               ),
             ),
