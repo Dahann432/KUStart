@@ -108,4 +108,6 @@ flutter:
      - family: UhBeeSe_hyun
        fonts:
          - asset: fonts/UhBeeSe_hyun/UhBee Se_hyun.ttf
+           weight: 500
          - asset: fonts/UhBeeSe_hyun/UhBee Se_hyun Bold.ttf
+           weight: 700

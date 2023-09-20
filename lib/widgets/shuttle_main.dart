@@ -102,24 +102,6 @@ class _ShuttleMainState extends State<ShuttleMain> {
               timeWidget // 시간 위젯
             ],
           ),
-        ),
-        const SizedBox(height: 20),
-        Container(
-          height: 20,
-          decoration: ShapeDecoration(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            shadows: const [
-              BoxShadow(
-                color: Color(0x3F000000),
-                blurRadius: 4,
-                offset: Offset(0, 0),
-                spreadRadius: 1,
-              )
-            ],
-          ),
         )
       ],
     );
@@ -136,7 +118,7 @@ class ToStation extends StatefulWidget {
 
 class _ToStationState extends State<ToStation> {
   DateTime now = DateTime.now();
-  late Timer? timer;
+  late Timer timer;
   bool biggerText = true;
   String remainingTime = '운행 종료';
 
@@ -166,12 +148,14 @@ class _ToStationState extends State<ToStation> {
         now = DateTime.now();
         updateRemainingTime();
       });
+    } else {
+      timer = Timer.periodic(Duration(seconds: 1), (timer) {});
     }
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    timer.cancel();
     super.dispose();
   }
 
@@ -279,7 +263,7 @@ class ToCampus extends StatefulWidget {
 
 class _ToCampusState extends State<ToCampus> {
   DateTime now = DateTime.now();
-  late Timer? timer;
+  late Timer timer;
   bool biggerText = true;
   String remainingTime = '운행 종료';
 
@@ -309,12 +293,14 @@ class _ToCampusState extends State<ToCampus> {
         now = DateTime.now();
         updateRemainingTime();
       });
+    } else {
+      timer = Timer.periodic(Duration(seconds: 1), (timer) {});
     }
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    timer.cancel();
     super.dispose();
   }
 

@@ -112,7 +112,7 @@ class _MenuMainState extends State<MenuMain> {
             ],
           ),
           const SizedBox(height: 25),
-          Image.asset('lib/images/dourourung.png', width: 300, height: 250,),
+          Image.asset('lib/images/dourourung.png', width: 250, height: 250),
           RichText(
             text: const TextSpan(
               children: <TextSpan>[
