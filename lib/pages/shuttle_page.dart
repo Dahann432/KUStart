@@ -15,7 +15,10 @@ class _ShuttlePageState extends State<ShuttlePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
 
     return Scaffold(
       appBar: AppBar(
@@ -75,10 +78,12 @@ class _ShuttlePageState extends State<ShuttlePage> {
                           // Toggle the container color
                           if (directionIcon.icon == Icons.east) {
                             directionIcon = Icon(Icons.west);
-                            timelineWidget = buildShuttleTimeline(scheduleToStation);
+                            timelineWidget =
+                                buildShuttleTimeline(scheduleToStation);
                           } else {
                             directionIcon = Icon(Icons.east);
-                            timelineWidget = buildShuttleTimeline(scheduleToCampus);
+                            timelineWidget =
+                                buildShuttleTimeline(scheduleToCampus);
                           }
                         });
                       },
@@ -151,6 +156,32 @@ class _ShuttlePageState extends State<ShuttlePage> {
                     ),
                   ),
                   timelineWidget,
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const ShapeDecoration(
+                          color: Color(0xFFF19A3D),
+                          shape: OvalBorder(),
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      const Text(
+                        '금요일 운행하지 않음',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          height: 0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30)
                 ],
               ),
             ),
@@ -236,10 +267,16 @@ class _ShuttlePageState extends State<ShuttlePage> {
   Widget buildShuttleTimeline(Map<int, List<int>> schedule) {
     // 시간별 셔틀 타임라인 위젯 목록을 저장할 리스트
     List<Widget> timelineWidgets = [const SizedBox(height: 15)];
+    bool fridayTimeline = false;
 
     // 주어진 Map의 각 항목을 반복하며 위젯을 생성
     schedule.forEach((hour, minutes) {
       List<Widget> minuteWidgets = [];
+
+      // 금요일 시간표
+      if (hour == 19 || hour == 20 || hour == 21) {
+        fridayTimeline = true;
+      }
 
       // 분에 대한 위젯을 생성
       for (var minute in minutes) {
@@ -247,7 +284,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
           Row(
             children: [
               Text(
-              formatTime(minute),
+                formatTime(minute),
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -268,7 +305,13 @@ class _ShuttlePageState extends State<ShuttlePage> {
           children: [
             Container(
               height: 55,
-              decoration: ShapeDecoration(
+              decoration: fridayTimeline ? ShapeDecoration(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 1, color: Color(0xFFF19A3D)),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ) : ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   side: const BorderSide(width: 1, color: Color(0xFF7B2D35)),
@@ -291,7 +334,10 @@ class _ShuttlePageState extends State<ShuttlePage> {
                             child: Container(
                               width: 40,
                               height: 40,
-                              decoration: const ShapeDecoration(
+                              decoration: fridayTimeline ? const ShapeDecoration(
+                                color: Color(0xFFF19A3D),
+                                shape: CircleBorder(),
+                              ) : const ShapeDecoration(
                                 color: Color(0xFF7B2D35),
                                 shape: CircleBorder(),
                               ),
@@ -332,8 +378,6 @@ class _ShuttlePageState extends State<ShuttlePage> {
     });
 
     // 모든 시간별 셔틀 타임라인 위젯을 Column으로 묶어 반환
-    return Column(
-      children: timelineWidgets
-    );
+    return Column(children: timelineWidgets);
   }
 }
