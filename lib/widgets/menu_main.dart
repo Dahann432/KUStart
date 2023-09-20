@@ -110,7 +110,23 @@ class _MenuMainState extends State<MenuMain> {
               buildVerticalDivider(),
               buildCornerButton('Corner 3', buttonColor3, 3),
             ],
-          )
+          ),
+          const SizedBox(height: 25),
+          Image.asset('lib/images/dourourung.png', width: 300, height: 250,),
+          RichText(
+            text: const TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: '준비 중 입니',
+                  style: TextStyle(fontFamily: 'UhBeeSe_hyun', fontSize: 20, color: Color(0xFFF19A3D)),
+                ),
+                TextSpan(
+                  text: '드르렁',
+                  style: TextStyle(fontFamily: 'UhBeeSe_hyun', fontSize: 20, color: Color(0xFF7B2D35)),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
