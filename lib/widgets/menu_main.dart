@@ -10,10 +10,10 @@ class MenuMain extends StatefulWidget {
 }
 
 class _MenuMainState extends State<MenuMain> {
-  late Color buttonColor1;
-  late Color buttonColor2;
-  late Color buttonColor3;
-  late bool isFirstRun; // 첫 실행 여부를 저장하기 위한 변수
+  Color buttonColor1 = Colors.transparent;
+  Color buttonColor2 = Colors.transparent;
+  Color buttonColor3 = Colors.transparent;
+  bool isFirstRun = true;
 
   @override
   void initState() {

@@ -128,7 +128,7 @@ class _ShuttleMainState extends State<ShuttleMain> {
 
 //조치원역 방향 셔틀
 class ToStation extends StatefulWidget {
-  const ToStation({Key? key});
+  ToStation({Key? key}) : super(key: key);
 
   @override
   State<ToStation> createState() => _ToStationState();
@@ -136,8 +136,9 @@ class ToStation extends StatefulWidget {
 
 class _ToStationState extends State<ToStation> {
   DateTime now = DateTime.now();
-  late Timer timer;
-  String remainingTime = '00:00';
+  late Timer? timer;
+  bool biggerText = true;
+  String remainingTime = '운행 종료';
 
   // 시간표 정보
   final Map<int, List<int>> schedule = {
@@ -159,16 +160,18 @@ class _ToStationState extends State<ToStation> {
   @override
   void initState() {
     super.initState();
-    updateRemainingTime();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      now = DateTime.now();
+    if (!isScheduleOver()) {
       updateRemainingTime();
-    });
+      timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        now = DateTime.now();
+        updateRemainingTime();
+      });
+    }
   }
 
   @override
   void dispose() {
-    timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -176,11 +179,7 @@ class _ToStationState extends State<ToStation> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (schedule.isEmpty || isScheduleOver()) {
-      setState(() {
-        remainingTime = '운행 종료';
-      });
-    } else if (remainingDuration.inHours >= 1) {
+    if (remainingDuration.inHours >= 1) {
       int hours = remainingDuration.inHours;
       setState(() {
         remainingTime = '$hours 시간 남음';
@@ -193,6 +192,7 @@ class _ToStationState extends State<ToStation> {
       String formattedRemainingTime =
           '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
       setState(() {
+        biggerText = false;
         remainingTime = formattedRemainingTime;
       });
     }
@@ -250,13 +250,21 @@ class _ToStationState extends State<ToStation> {
   Widget build(BuildContext context) {
     return Text(
       remainingTime,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 70,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
-        height: 0,
-      ),
+      style: biggerText
+          ? const TextStyle(
+              color: Colors.black,
+              fontSize: 50,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            )
+          : const TextStyle(
+              color: Colors.black,
+              fontSize: 70,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            ),
     );
   }
 }
@@ -271,8 +279,9 @@ class ToCampus extends StatefulWidget {
 
 class _ToCampusState extends State<ToCampus> {
   DateTime now = DateTime.now();
-  late Timer timer;
-  String remainingTime = '00:00';
+  late Timer? timer;
+  bool biggerText = true;
+  String remainingTime = '운행 종료';
 
   final Map<int, List<int>> schedule = {
     8: [20, 30, 40, 50],
@@ -294,16 +303,18 @@ class _ToCampusState extends State<ToCampus> {
   @override
   void initState() {
     super.initState();
-    updateRemainingTime();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      now = DateTime.now();
+    if (!isScheduleOver()) {
       updateRemainingTime();
-    });
+      timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        now = DateTime.now();
+        updateRemainingTime();
+      });
+    }
   }
 
   @override
   void dispose() {
-    timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
@@ -311,11 +322,7 @@ class _ToCampusState extends State<ToCampus> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (isScheduleOver()) {
-      setState(() {
-        remainingTime = '운행 종료';
-      });
-    } else if (remainingDuration.inHours >= 1) {
+    if (remainingDuration.inHours >= 1) {
       int hours = remainingDuration.inHours;
       setState(() {
         remainingTime = '$hours 시간 남음';
@@ -328,6 +335,7 @@ class _ToCampusState extends State<ToCampus> {
       String formattedRemainingTime =
           '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
       setState(() {
+        biggerText = false;
         remainingTime = formattedRemainingTime;
       });
     }
@@ -385,13 +393,21 @@ class _ToCampusState extends State<ToCampus> {
   Widget build(BuildContext context) {
     return Text(
       remainingTime,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 70,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
-        height: 0,
-      ),
+      style: biggerText
+          ? const TextStyle(
+              color: Colors.black,
+              fontSize: 50,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            )
+          : const TextStyle(
+              color: Colors.black,
+              fontSize: 70,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            ),
     );
   }
 }
