@@ -251,7 +251,8 @@ class _MenuPageState extends State<MenuPage> {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('lib/images/dourourung.png', width: 200, height: 200),
+                          Image.asset('lib/images/dourourung.png',
+                              width: 200, height: 200),
                           RichText(
                             text: const TextSpan(
                               children: <TextSpan>[
@@ -364,7 +365,6 @@ class _MenuPageState extends State<MenuPage> {
                           )
                         ],
                       ),
-
                     ]),
                   )
                 ],
@@ -453,7 +453,8 @@ class _MenuPageState extends State<MenuPage> {
             style: TextStyle(
               color: dayButtonColor == Colors.transparent
                   ? Colors.black // 버튼 색이 투명이면 검정색
-                  : Colors.white, // 버튼 색이 흰색이면 흰색
+                  : Colors.white,
+              // 버튼 색이 흰색이면 흰색
               fontSize: 15,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.w400,

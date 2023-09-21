@@ -13,6 +13,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _SignInState extends State<MainPage> {
+  int _backButtonPressedCount = 0;
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -54,23 +56,26 @@ class _SignInState extends State<MainPage> {
           )
         ],
       ),
-      body: Container(
-        color: Colors.white,
-        height: screenHeight,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: ResponsiveCenter(
-            maxContentWidth: BreakPoint.tablet,
-            padding: const EdgeInsets.all(20),
-            child: Center(
-              child: Column(
-                children: [
-                  ShuttleMain(),
-                  const SizedBox(height: 20),
-                  MenuMain(),
-                  const SizedBox(height: 20),
-                  CampusMapMain()
-                ],
+      body: WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Container(
+          color: Colors.white,
+          height: screenHeight,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: ResponsiveCenter(
+              maxContentWidth: BreakPoint.tablet,
+              padding: const EdgeInsets.all(20),
+              child: Center(
+                child: Column(
+                  children: [
+                    ShuttleMain(),
+                    const SizedBox(height: 20),
+                    MenuMain(),
+                    const SizedBox(height: 20),
+                    CampusMapMain()
+                  ],
+                ),
               ),
             ),
           ),
@@ -108,5 +113,24 @@ class _SignInState extends State<MainPage> {
             )
           ]),
     );
+  }
+
+  Future<bool> _onBackPressed() async {
+    if (_backButtonPressedCount == 1) {
+      // 뒤로가기 버튼이 두 번 눌렸을 때 앱 종료
+      return true;
+    } else {
+      // 뒤로가기 버튼이 한 번 눌렸을 때 안내 메시지 표시
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('한 번 더 뒤로가기 버튼을 누르면 종료됩니다.'),
+        ),
+      );
+      _backButtonPressedCount++;
+      // 2초 동안 다시 뒤로가기 버튼을 누르면 앱 종료
+      await Future.delayed(Duration(seconds: 2));
+      _backButtonPressedCount = 0;
+      return false;
+    }
   }
 }

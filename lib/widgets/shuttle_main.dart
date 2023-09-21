@@ -99,7 +99,9 @@ class _ShuttleMainState extends State<ShuttleMain> {
                 ),
                 const SizedBox(width: 15)
               ]),
-              Container(height: 125, alignment: Alignment.center, child: timeWidget) // 시간 위젯
+              Container(
+                  height: 125, alignment: Alignment.center, child: timeWidget)
+              // 시간 위젯
             ],
           ),
         )
@@ -176,7 +178,9 @@ class _ToStationState extends State<ToStation> {
       });
     } else {
       String formattedRemainingTime =
-          '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
+          '${remainingDuration.inMinutes.toString().padLeft(
+          2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(
+          2, '0')}';
       setState(() {
         biggerText = false;
         remainingTime = formattedRemainingTime;
@@ -220,10 +224,18 @@ class _ToStationState extends State<ToStation> {
         closestHour++;
         closestMinute = minutesList[0];
       }
+    } else {
+      while (!schedule.containsKey(closestHour)) {
+        closestHour++;
+        closestMinute = 0;
+        if (schedule.containsKey(closestHour)) {
+          closestMinute = 50;
+        }
+      }
     }
 
     DateTime nextTime =
-        DateTime(now.year, now.month, now.day, closestHour, closestMinute);
+    DateTime(now.year, now.month, now.day, closestHour, closestMinute);
     return nextTime;
   }
 
@@ -233,19 +245,19 @@ class _ToStationState extends State<ToStation> {
       remainingTime,
       style: biggerText
           ? const TextStyle(
-              color: Colors.black,
-              fontSize: 50,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              height: 0,
-            )
+        color: Colors.black,
+        fontSize: 50,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+        height: 0,
+      )
           : const TextStyle(
-              color: Colors.black,
-              fontSize: 70,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              height: 0,
-            ),
+        color: Colors.black,
+        fontSize: 70,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+        height: 0,
+      ),
     );
   }
 }
@@ -318,7 +330,9 @@ class _ToCampusState extends State<ToCampus> {
       });
     } else {
       String formattedRemainingTime =
-          '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
+          '${remainingDuration.inMinutes.toString().padLeft(
+          2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(
+          2, '0')}';
       setState(() {
         biggerText = false;
         remainingTime = formattedRemainingTime;
@@ -362,10 +376,18 @@ class _ToCampusState extends State<ToCampus> {
         closestHour++;
         closestMinute = minutesList[0];
       }
+    } else {
+      while (!schedule.containsKey(closestHour)) {
+        closestHour++;
+        closestMinute = 0;
+        if (schedule.containsKey(closestHour)) {
+          closestMinute = 20;
+        }
+      }
     }
 
     DateTime nextTime =
-        DateTime(now.year, now.month, now.day, closestHour, closestMinute);
+    DateTime(now.year, now.month, now.day, closestHour, closestMinute);
     return nextTime;
   }
 
@@ -375,19 +397,19 @@ class _ToCampusState extends State<ToCampus> {
       remainingTime,
       style: biggerText
           ? const TextStyle(
-              color: Colors.black,
-              fontSize: 50,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              height: 0,
-            )
+        color: Colors.black,
+        fontSize: 50,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+        height: 0,
+      )
           : const TextStyle(
-              color: Colors.black,
-              fontSize: 70,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w800,
-              height: 0,
-            ),
+        color: Colors.black,
+        fontSize: 70,
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w800,
+        height: 0,
+      ),
     );
   }
 }
