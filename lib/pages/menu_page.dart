@@ -277,8 +277,8 @@ class _MenuPageState extends State<MenuPage> {
                     ]),
                   ),
                   const SizedBox(height: 20),
-                  Container(
-                    height: 190,
+                  SizedBox(
+                    height: 205,
                     child: Column(children: [
                       Container(
                         decoration: const ShapeDecoration(
@@ -315,49 +315,56 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       const SizedBox(height: 9),
-                      const Text(
-                        '조식 - 07:00~09:00',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
+                      // 운영 시간 Text
+                      const Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Text(
+                            '조식 - 07:00~09:00',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            '중식 - 11:30~13:30',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            '석식 - 17:30~18:30',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            '카페 - 08:00~17:00',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        '중식 - 11:30~13:30',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        '석식 - 17:30~18:30',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        '카페 - 08:00~17:00',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      )
+
                     ]),
                   )
                 ],
