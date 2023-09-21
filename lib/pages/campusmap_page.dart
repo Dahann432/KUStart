@@ -37,6 +37,6 @@ class _CampusmapPageState extends State<CampusmapPage> {
             },
           ),
         ),
-        body: Image.asset('lib/images/campusmap_img.jpg'));
+        body: Center(child: Image.asset('lib/images/campusmap_img.jpg')));
   }
 }

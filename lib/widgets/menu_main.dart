@@ -47,9 +47,12 @@ class _MenuMainState extends State<MenuMain> {
   void saveButtonColor(int buttonNumber) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      buttonColor1 = buttonNumber == 1 ? const Color(0xFF7B2D35) : Colors.transparent;
-      buttonColor2 = buttonNumber == 2 ? const Color(0xFF7B2D35) : Colors.transparent;
-      buttonColor3 = buttonNumber == 3 ? const Color(0xFF7B2D35) : Colors.transparent;
+      buttonColor1 =
+          buttonNumber == 1 ? const Color(0xFF7B2D35) : Colors.transparent;
+      buttonColor2 =
+          buttonNumber == 2 ? const Color(0xFF7B2D35) : Colors.transparent;
+      buttonColor3 =
+          buttonNumber == 3 ? const Color(0xFF7B2D35) : Colors.transparent;
 
       // 선택한 버튼의 정보를 SharedPreferences에 저장합니다.
       prefs.setBool('buttonColor1', buttonNumber == 1);
@@ -101,6 +104,7 @@ class _MenuMainState extends State<MenuMain> {
               ),
             ],
           ),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -112,20 +116,31 @@ class _MenuMainState extends State<MenuMain> {
             ],
           ),
           const SizedBox(height: 25),
-          Image.asset('lib/images/dourourung.png', width: 250, height: 250),
-          RichText(
-            text: const TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: '준비 중 입니',
-                  style: TextStyle(fontFamily: 'UhBeeSe_hyun', fontSize: 20, color: Color(0xFFF19A3D)),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('lib/images/dourourung.png', width: 200, height: 200),
+              RichText(
+                text: const TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '준비 중 입니',
+                      style: TextStyle(
+                          fontFamily: 'UhBeeSe_hyun',
+                          fontSize: 20,
+                          color: Color(0xFFF19A3D)),
+                    ),
+                    TextSpan(
+                      text: '드르렁',
+                      style: TextStyle(
+                          fontFamily: 'UhBeeSe_hyun',
+                          fontSize: 20,
+                          color: Color(0xFF7B2D35)),
+                    ),
+                  ],
                 ),
-                TextSpan(
-                  text: '드르렁',
-                  style: TextStyle(fontFamily: 'UhBeeSe_hyun', fontSize: 20, color: Color(0xFF7B2D35)),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

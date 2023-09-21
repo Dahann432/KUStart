@@ -38,8 +38,8 @@ class _ShuttleMainState extends State<ShuttleMain> {
             ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              const SizedBox(height: 15),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Text(
                   '조치원역',
@@ -99,7 +99,7 @@ class _ShuttleMainState extends State<ShuttleMain> {
                 ),
                 const SizedBox(width: 15)
               ]),
-              timeWidget // 시간 위젯
+              Container(height: 125, alignment: Alignment.center, child: timeWidget) // 시간 위젯
             ],
           ),
         )
@@ -163,13 +163,15 @@ class _ToStationState extends State<ToStation> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (remainingDuration.inHours >= 1) {
+    if (remainingDuration.inHours >= 1 && now.isBefore(nextTime)) {
       int hours = remainingDuration.inHours;
       setState(() {
+        biggerText = true;
         remainingTime = '$hours 시간 남음';
       });
-    } else if (remainingDuration.inSeconds < 60) {
+    } else if (remainingDuration.inSeconds < 60 && now.isBefore(nextTime)) {
       setState(() {
+        biggerText = true;
         remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
       });
     } else {
@@ -217,11 +219,6 @@ class _ToStationState extends State<ToStation> {
       if (closestMinute < currentMinute) {
         closestHour++;
         closestMinute = minutesList[0];
-      }
-    } else {
-      while (!schedule.containsKey(closestHour)) {
-        closestHour++;
-        closestMinute = 0;
       }
     }
 
@@ -308,13 +305,15 @@ class _ToCampusState extends State<ToCampus> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (remainingDuration.inHours >= 1) {
+    if (remainingDuration.inHours >= 1 && now.isBefore(nextTime)) {
       int hours = remainingDuration.inHours;
       setState(() {
+        biggerText = true;
         remainingTime = '$hours 시간 남음';
       });
-    } else if (remainingDuration.inSeconds < 60) {
+    } else if (remainingDuration.inSeconds < 60 && now.isBefore(nextTime)) {
       setState(() {
+        biggerText = true;
         remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
       });
     } else {
@@ -362,11 +361,6 @@ class _ToCampusState extends State<ToCampus> {
       if (closestMinute < currentMinute) {
         closestHour++;
         closestMinute = minutesList[0];
-      }
-    } else {
-      while (!schedule.containsKey(closestHour)) {
-        closestHour++;
-        closestMinute = 0;
       }
     }
 
