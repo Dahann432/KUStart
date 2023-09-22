@@ -71,7 +71,6 @@ class _MenuMainState extends State<MenuMain> {
     final formattedDate = dateFormat.format(now);
 
     return Container(
-      height: 420,
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -108,40 +107,15 @@ class _MenuMainState extends State<MenuMain> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildCornerButton('Corner 1', buttonColor1, 1),
+              buildCornerButton('조식', buttonColor1, 1),
               buildVerticalDivider(),
-              buildCornerButton('Corner 2', buttonColor2, 2),
+              buildCornerButton('중식', buttonColor2, 2),
               buildVerticalDivider(),
-              buildCornerButton('Corner 3', buttonColor3, 3),
+              buildCornerButton('석식', buttonColor3, 3),
             ],
           ),
           const SizedBox(height: 25),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('lib/images/dourourung.png', width: 200, height: 200),
-              RichText(
-                text: const TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '준비 중 입니',
-                      style: TextStyle(
-                          fontFamily: 'UhBeeSe_hyun',
-                          fontSize: 20,
-                          color: Color(0xFFF19A3D)),
-                    ),
-                    TextSpan(
-                      text: '드르렁',
-                      style: TextStyle(
-                          fontFamily: 'UhBeeSe_hyun',
-                          fontSize: 20,
-                          color: Color(0xFF7B2D35)),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          preparationImage()
         ],
       ),
     );
@@ -185,6 +159,36 @@ class _MenuMainState extends State<MenuMain> {
       height: 25,
       width: 0.50,
       color: Colors.black,
+    );
+  }
+
+  Widget preparationImage() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('lib/images/dourourung.png', width: 200, height: 200),
+        RichText(
+          text: const TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: '준비 중 입니',
+                style: TextStyle(
+                    fontFamily: 'UhBeeSe_hyun',
+                    fontSize: 20,
+                    color: Color(0xFFF19A3D)),
+              ),
+              TextSpan(
+                text: '드르렁',
+                style: TextStyle(
+                    fontFamily: 'UhBeeSe_hyun',
+                    fontSize: 20,
+                    color: Color(0xFF7B2D35)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 50)
+      ],
     );
   }
 }
