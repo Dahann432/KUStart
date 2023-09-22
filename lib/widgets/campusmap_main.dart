@@ -12,7 +12,7 @@ class _CampusMapMainState extends State<CampusMapMain> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushReplacementNamed(context, '/campusmap');
+        Navigator.pushNamed(context, '/campusmap', arguments: {"update": true});
       },
       child: Container(
         height: 110,

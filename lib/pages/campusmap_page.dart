@@ -33,7 +33,7 @@ class _CampusmapPageState extends State<CampusmapPage> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pop(context);
             },
           ),
         ),

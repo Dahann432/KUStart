@@ -38,7 +38,7 @@ class SettingsPage extends StatelessWidget {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pop(context);
             }),
       ),
       body: Container(

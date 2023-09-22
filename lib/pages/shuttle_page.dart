@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kustart/pages/main_page.dart';
+import 'package:kustart/pages/menu_page.dart';
 import 'package:kustart/responsive/breakpoint.dart';
 import 'package:kustart/responsive/responsive_center.dart';
 
@@ -15,10 +17,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +42,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false, arguments: {"update": true});
           },
         ),
       ),
@@ -193,11 +192,9 @@ class _ShuttlePageState extends State<ShuttlePage> {
         onTap: (int index) {
           // 페이지 이동
           if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false, arguments: {"update": true});
           } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/menu');
-          } else if (index == 2) {
-            Navigator.pushReplacementNamed(context, '/shuttle');
+            Navigator.pushNamedAndRemoveUntil(context, '/menu', ModalRoute.withName('/home'), arguments: {"update": true});
           }
         },
         // type: BottomNavigationBarType.fixed,
@@ -305,19 +302,23 @@ class _ShuttlePageState extends State<ShuttlePage> {
           children: [
             Container(
               height: 55,
-              decoration: fridayTimeline ? ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(width: 1, color: Color(0xFFF19A3D)),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ) : ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(width: 1, color: Color(0xFF7B2D35)),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
+              decoration: fridayTimeline
+                  ? ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                            width: 1, color: Color(0xFFF19A3D)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    )
+                  : ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                            width: 1, color: Color(0xFF7B2D35)),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
               child: Stack(
                 children: [
                   Positioned(
@@ -334,13 +335,15 @@ class _ShuttlePageState extends State<ShuttlePage> {
                             child: Container(
                               width: 40,
                               height: 40,
-                              decoration: fridayTimeline ? const ShapeDecoration(
-                                color: Color(0xFFF19A3D),
-                                shape: CircleBorder(),
-                              ) : const ShapeDecoration(
-                                color: Color(0xFF7B2D35),
-                                shape: CircleBorder(),
-                              ),
+                              decoration: fridayTimeline
+                                  ? const ShapeDecoration(
+                                      color: Color(0xFFF19A3D),
+                                      shape: CircleBorder(),
+                                    )
+                                  : const ShapeDecoration(
+                                      color: Color(0xFF7B2D35),
+                                      shape: CircleBorder(),
+                                    ),
                             ),
                           ),
                           Positioned(

@@ -144,7 +144,7 @@ class _MenuPageState extends State<MenuPage> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false, arguments: {"update": true});
             }),
       ),
       body: Container(
@@ -378,11 +378,9 @@ class _MenuPageState extends State<MenuPage> {
         onTap: (int index) {
           // 페이지 이동
           if (index == 0) {
-            Navigator.pushReplacementNamed(context, '/home');
-          } else if (index == 1) {
-            Navigator.pushReplacementNamed(context, '/menu');
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false, arguments: {"update": true});
           } else if (index == 2) {
-            Navigator.pushReplacementNamed(context, '/shuttle');
+            Navigator.pushNamedAndRemoveUntil(context, '/shuttle', ModalRoute.withName('/home'), arguments: {"update": true});
           }
         },
         // type: BottomNavigationBarType.fixed,

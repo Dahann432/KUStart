@@ -4,6 +4,7 @@ import 'package:kustart/responsive/breakpoint.dart';
 import 'package:kustart/widgets/shuttle_main.dart';
 import 'package:kustart/widgets/menu_main.dart';
 import 'package:kustart/widgets/campusmap_main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -51,7 +52,8 @@ class _SignInState extends State<MainPage> {
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/settings');
+              Navigator.pushNamed(context, '/settings',
+                  arguments: {"update": true});
             },
           )
         ],
@@ -85,19 +87,25 @@ class _SignInState extends State<MainPage> {
           currentIndex: 0,
           onTap: (int index) {
             // 페이지 이동
-            if (index == 0) {
-              Navigator.pushReplacementNamed(context, '/home');
-            } else if (index == 1) {
-              Navigator.pushReplacementNamed(context, '/menu');
+            if (index == 1) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/menu', ModalRoute.withName('/home'),
+                  arguments: {"update": true});
             } else if (index == 2) {
-              Navigator.pushReplacementNamed(context, '/shuttle');
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/shuttle', ModalRoute.withName('/home'),
+                  arguments: {"update": true});
             }
           },
           // type: BottomNavigationBarType.fixed, // item이 4개 이상일 경우 추가
-          selectedItemColor: const Color(0xFF862633), // 선택된 요소 색
-          unselectedItemColor: Colors.grey, // 선택되지 않은 요소 색
-          showSelectedLabels: true, // 선택된 라벨 보이기/숨기기
-          showUnselectedLabels: false, // 선택되지 않은 라벨 보이기/숨기기
+          selectedItemColor: const Color(0xFF862633),
+          // 선택된 요소 색
+          unselectedItemColor: Colors.grey,
+          // 선택되지 않은 요소 색
+          showSelectedLabels: true,
+          // 선택된 라벨 보이기/숨기기
+          showUnselectedLabels: false,
+          // 선택되지 않은 라벨 보이기/숨기기
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -121,11 +129,7 @@ class _SignInState extends State<MainPage> {
       return true;
     } else {
       // 뒤로가기 버튼이 한 번 눌렸을 때 안내 메시지 표시
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('한 번 더 뒤로가기 버튼을 누르면 종료됩니다.'),
-        ),
-      );
+      toast(context, '\'뒤로\'버튼 한번 더 누르시면\n종료됩니다.');
       _backButtonPressedCount++;
       // 2초 동안 다시 뒤로가기 버튼을 누르면 앱 종료
       await Future.delayed(Duration(seconds: 2));
@@ -133,4 +137,34 @@ class _SignInState extends State<MainPage> {
       return false;
     }
   }
+}
+
+void toast(context,text) {
+  final fToast = FToast();
+  fToast.init(context);
+  Widget toast = Container(
+    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(25.0),
+      color: Colors.black45,
+    ),
+    child: Text(text, textAlign: TextAlign.left,
+        style: const TextStyle(color: Colors.white, fontSize: 15.0)),
+  );
+
+  fToast.showToast(
+      child: toast,
+      toastDuration: const Duration(seconds: 2),
+      positionedToastBuilder: (context, child) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              bottom: 80,
+              child: child,
+            ),
+          ],
+        );
+      }
+  );
 }

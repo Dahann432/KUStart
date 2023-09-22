@@ -165,22 +165,20 @@ class _ToStationState extends State<ToStation> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (remainingDuration.inHours >= 1 && now.isBefore(nextTime)) {
+    if (remainingDuration.inHours >= 1) {
       int hours = remainingDuration.inHours;
       setState(() {
         biggerText = true;
         remainingTime = '$hours 시간 남음';
       });
-    } else if (remainingDuration.inSeconds < 60 && now.isBefore(nextTime)) {
+    } else if (remainingDuration.inSeconds < 60) {
       setState(() {
         biggerText = true;
         remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
       });
     } else {
       String formattedRemainingTime =
-          '${remainingDuration.inMinutes.toString().padLeft(
-          2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(
-          2, '0')}';
+          '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
       setState(() {
         biggerText = false;
         remainingTime = formattedRemainingTime;
@@ -235,7 +233,7 @@ class _ToStationState extends State<ToStation> {
     }
 
     DateTime nextTime =
-    DateTime(now.year, now.month, now.day, closestHour, closestMinute);
+        DateTime(now.year, now.month, now.day, closestHour, closestMinute);
     return nextTime;
   }
 
@@ -245,19 +243,19 @@ class _ToStationState extends State<ToStation> {
       remainingTime,
       style: biggerText
           ? const TextStyle(
-        color: Colors.black,
-        fontSize: 50,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
-        height: 0,
-      )
+              color: Colors.black,
+              fontSize: 50,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            )
           : const TextStyle(
-        color: Colors.black,
-        fontSize: 70,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
-        height: 0,
-      ),
+              color: Colors.black,
+              fontSize: 70,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            ),
     );
   }
 }
@@ -317,22 +315,20 @@ class _ToCampusState extends State<ToCampus> {
     DateTime nextTime = calculateNextTime();
     Duration remainingDuration = nextTime.difference(now);
 
-    if (remainingDuration.inHours >= 1 && now.isBefore(nextTime)) {
+    if (remainingDuration.inHours >= 1) {
       int hours = remainingDuration.inHours;
       setState(() {
         biggerText = true;
         remainingTime = '$hours 시간 남음';
       });
-    } else if (remainingDuration.inSeconds < 60 && now.isBefore(nextTime)) {
+    } else if (remainingDuration.inSeconds < 60) {
       setState(() {
         biggerText = true;
         remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
       });
     } else {
       String formattedRemainingTime =
-          '${remainingDuration.inMinutes.toString().padLeft(
-          2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(
-          2, '0')}';
+          '${remainingDuration.inMinutes.toString().padLeft(2, '0')}:${(remainingDuration.inSeconds % 60).toString().padLeft(2, '0')}';
       setState(() {
         biggerText = false;
         remainingTime = formattedRemainingTime;
@@ -387,7 +383,7 @@ class _ToCampusState extends State<ToCampus> {
     }
 
     DateTime nextTime =
-    DateTime(now.year, now.month, now.day, closestHour, closestMinute);
+        DateTime(now.year, now.month, now.day, closestHour, closestMinute);
     return nextTime;
   }
 
@@ -397,19 +393,19 @@ class _ToCampusState extends State<ToCampus> {
       remainingTime,
       style: biggerText
           ? const TextStyle(
-        color: Colors.black,
-        fontSize: 50,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
-        height: 0,
-      )
+              color: Colors.black,
+              fontSize: 50,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            )
           : const TextStyle(
-        color: Colors.black,
-        fontSize: 70,
-        fontFamily: 'Inter',
-        fontWeight: FontWeight.w800,
-        height: 0,
-      ),
+              color: Colors.black,
+              fontSize: 70,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 0,
+            ),
     );
   }
 }
@@ -430,59 +426,13 @@ class _FlipArrowAnimationState extends State<FlipArrowAnimation> {
       margin: const EdgeInsets.only(top: 20),
       child: FlipCard(
         direction: FlipDirection.HORIZONTAL,
-        front: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: 70,
-              height: 25,
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                shadows: const [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 0),
-                    spreadRadius: 2,
-                  )
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.east,
-              color: Colors.black,
-            ),
-          ],
+        front: const Icon(
+          Icons.east,
+          color: Colors.black,
         ),
-        back: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: 70,
-              height: 25,
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                shadows: const [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 0),
-                    spreadRadius: 2,
-                  )
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.west,
-              color: Colors.black,
-            ),
-          ],
+        back: const Icon(
+          Icons.west,
+          color: Colors.black,
         ),
         onFlip: () {
           print('dd');
