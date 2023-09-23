@@ -159,7 +159,6 @@ class _MenuPageState extends State<MenuPage> {
               child: Column(
                 children: [
                   Container(
-                    height: 500,
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -240,11 +239,11 @@ class _MenuPageState extends State<MenuPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          buildMenuButton('Menu 1', menuButtonColors[0], 1),
+                          buildMenuButton('조식', menuButtonColors[0], 1),
                           buildVerticalDivider(),
-                          buildMenuButton('Menu 2', menuButtonColors[1], 2),
+                          buildMenuButton('중식', menuButtonColors[1], 2),
                           buildVerticalDivider(),
-                          buildMenuButton('Menu 3', menuButtonColors[2], 3),
+                          buildMenuButton('석식', menuButtonColors[2], 3),
                         ],
                       ),
                       const SizedBox(height: 25),
@@ -273,6 +272,7 @@ class _MenuPageState extends State<MenuPage> {
                               ],
                             ),
                           ),
+                          const SizedBox(height: 50)
                         ],
                       ),
                     ]),
