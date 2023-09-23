@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -189,6 +190,75 @@ class _MenuMainState extends State<MenuMain> {
         ),
         const SizedBox(height: 50)
       ],
+    );
+  }
+}
+
+class MenuListText extends StatefulWidget {
+  final String dayOfWeek;
+
+  const MenuListText({super.key, required this.dayOfWeek});
+
+  @override
+  State<MenuListText> createState() => _MenuListTextState();
+}
+
+class _MenuListTextState extends State<MenuListText> {
+  Future<List<String>> getMenuList(String dayOfWeek) async {
+    Map<int, String> day = {
+      0: 'Mon',
+      1: 'Tue',
+      2: 'Wed',
+      3: 'Thu',
+      4: 'Fri',
+    };
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    for (int i = 0; i <= 4; i++) {
+      final ref = FirebaseDatabase.instance.ref();
+      final menu =
+          await ref.child('교직원식당').child(day[i]!).once(DatabaseEventType.value);
+      if (menu.snapshot.value != null) {
+        List<String>? menuList = (menu.snapshot.value as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+
+        // menuList를 로컬 캐시에 저장
+        await prefs.setStringList(day[i]!, menuList);
+      } else {
+        print('No data available.');
+      }
+    }
+
+    List<String>? storedMenu = prefs.getStringList(dayOfWeek);
+    if (storedMenu != null) {
+      return storedMenu;
+    } else {
+      return [];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<String>>(
+      future: getMenuList(widget.dayOfWeek),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          List<String> menuList = snapshot.data ?? [];
+
+          return Column(
+            children: [
+              for (String menu in menuList) Text(menu),
+              const SizedBox(height: 50)
+            ],
+          );
+        }
+      },
     );
   }
 }

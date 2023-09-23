@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kustart/pages/main_page.dart';
-import 'package:kustart/pages/menu_page.dart';
 import 'package:kustart/responsive/breakpoint.dart';
 import 'package:kustart/responsive/responsive_center.dart';
 
