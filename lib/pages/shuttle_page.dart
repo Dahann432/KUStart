@@ -95,9 +95,9 @@ class _ShuttlePageState extends State<ShuttlePage> {
                           shadows: const [
                             BoxShadow(
                               color: Color(0x3F000000),
-                              blurRadius: 4,
+                              blurRadius: 0.5,
                               offset: Offset(0, 0),
-                              spreadRadius: 2,
+                              spreadRadius: 0.5,
                             )
                           ],
                         ),

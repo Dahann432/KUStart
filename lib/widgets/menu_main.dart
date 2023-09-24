@@ -80,9 +80,9 @@ class _MenuMainState extends State<MenuMain> {
         shadows: const [
           BoxShadow(
             color: Color(0x3F000000),
-            blurRadius: 4,
+            blurRadius: 0.5,
             offset: Offset(0, 0),
-            spreadRadius: 1,
+            spreadRadius: 0.5,
           )
         ],
       ),
