@@ -31,9 +31,9 @@ class _ShuttleMainState extends State<ShuttleMain> {
             shadows: const [
               BoxShadow(
                 color: Color(0x3F000000),
-                blurRadius: 4,
+                blurRadius: 0.5,
                 offset: Offset(0, 0),
-                spreadRadius: 1,
+                spreadRadius: 0.5,
               )
             ],
           ),
@@ -97,7 +97,7 @@ class _ShuttleMainState extends State<ShuttleMain> {
                     height: 0,
                   ),
                 ),
-                const SizedBox(width: 15)
+                const SizedBox(width: 10)
               ]),
               Container(
                   height: 125, alignment: Alignment.center, child: timeWidget)
@@ -105,9 +105,9 @@ class _ShuttleMainState extends State<ShuttleMain> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         Container(
-          height: 75,
+          height: 90,
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(

@@ -1,8 +1,6 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:kustart/responsive/breakpoint.dart';
 import 'package:kustart/responsive/responsive_center.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class MenuPage extends StatefulWidget {
@@ -13,28 +11,14 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  List<Color> menuButtonColors = [
-    Colors.transparent,
-    Colors.transparent,
-    Colors.transparent,
-  ];
-
-  late Color dayButtonColor1 = Colors.transparent;
-  late Color dayButtonColor2 = Colors.transparent;
-  late Color dayButtonColor3 = Colors.transparent;
-  late Color dayButtonColor4 = Colors.transparent;
-  late Color dayButtonColor5 = Colors.transparent;
-  late Color dayButtonColor6 = Colors.transparent;
-  late Color dayButtonColor7 = Colors.transparent;
+  int selectedDayButton = 1; // 선택한 요일 버튼 초기화
+  int selectedMenuButton = 1; // 선택한 메뉴 버튼 초기화
 
   var dayMenuList;
 
   @override
   void initState() {
     super.initState();
-    loadButtonColors();
-    updateDayButtonColors();
-    checkFirstRun();
     initializeDayMenuList();
   }
 
@@ -42,85 +26,29 @@ class _MenuPageState extends State<MenuPage> {
     final now = DateTime.now();
     final dateFormat = DateFormat('E');
     final currentDayOfWeek = dateFormat.format(now);
-    dayMenuList = MenuListText(dayOfWeek: currentDayOfWeek);
+    dayMenuList = MenuListText(dayOfWeek: currentDayOfWeek, menu: 'lunch');
   }
 
-  void checkFirstRun() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  void updateDayMenuList(int selectedDayButton, int selectedMenuButton) {
+    Map<int, String> dayOfWeek = {
+      7: 'Sun',
+      1: 'Mon',
+      2: 'Tue',
+      3: 'Wed',
+      4: 'Thu',
+      5: 'Fri',
+      6: 'Sat'
+    };
 
-    // 처음 실행한 경우
-    if (!prefs.containsKey('firstRun') || prefs.getBool('firstRun') == true) {
-      // 초기 실행 여부를 저장합니다.
-      prefs.setBool('firstRun', false);
+    Map<int, String> menu = {
+      1: 'breakfast',
+      2: 'lunch',
+      3: 'dinner',
+    };
 
-      // 첫 번째 메뉴 버튼을 선택합니다.
-      saveButtonColor(1);
-    }
-  }
-
-  void loadButtonColors() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      // SharedPreferences에서 저장된 값을 불러옵니다. 없을 경우 기본값을 설정합니다.
-      for (int i = 0; i < 3; i++) {
-        menuButtonColors[i] = prefs.getBool('menuButtonColor$i') == true
-            ? const Color(0xFF7B2D35)
-            : Colors.transparent;
-      }
+      dayMenuList = MenuListText(dayOfWeek: dayOfWeek[selectedDayButton]!, menu: menu[selectedMenuButton]!);
     });
-  }
-
-  void saveButtonColor(int menuButtonNumber) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      for (int i = 0; i < 3; i++) {
-        menuButtonColors[i] = menuButtonNumber == i + 1
-            ? const Color(0xFF7B2D35)
-            : Colors.transparent;
-
-        // 선택한 버튼의 정보를 SharedPreferences에 저장합니다.
-        prefs.setBool('menuButtonColor$i', menuButtonNumber == i + 1);
-      }
-    });
-  }
-
-  void updateDayButtonColors() {
-    final now = DateTime.now();
-    final currentDay = now.weekday;
-
-    // 요일별 버튼 색상 초기화
-    dayButtonColor1 = Colors.transparent;
-    dayButtonColor2 = Colors.transparent;
-    dayButtonColor3 = Colors.transparent;
-    dayButtonColor4 = Colors.transparent;
-    dayButtonColor5 = Colors.transparent;
-    dayButtonColor6 = Colors.transparent;
-    dayButtonColor7 = Colors.transparent;
-
-    // 현재 요일에 따라 색상 변경
-    switch (currentDay) {
-      case 1:
-        dayButtonColor1 = const Color(0xFF862633);
-        break;
-      case 2:
-        dayButtonColor2 = const Color(0xFF862633);
-        break;
-      case 3:
-        dayButtonColor3 = const Color(0xFF862633);
-        break;
-      case 4:
-        dayButtonColor4 = const Color(0xFF862633);
-        break;
-      case 5:
-        dayButtonColor5 = const Color(0xFF862633);
-        break;
-      case 6:
-        dayButtonColor6 = const Color(0xFF862633);
-        break;
-      case 7:
-        dayButtonColor7 = const Color(0xFF862633);
-        break;
-    }
   }
 
   @override
@@ -221,19 +149,19 @@ class _MenuPageState extends State<MenuPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          buildDayButton('일', dayButtonColor7, 7, 'Sun'),
+                          buildDayButton('일', 7, 'Sun'),
                           const SizedBox(width: 10),
-                          buildDayButton('월', dayButtonColor1, 1, 'Mon'),
+                          buildDayButton('월', 1, 'Mon'),
                           const SizedBox(width: 10),
-                          buildDayButton('화', dayButtonColor2, 2, 'Tue'),
+                          buildDayButton('화', 2, 'Tue'),
                           const SizedBox(width: 10),
-                          buildDayButton('수', dayButtonColor3, 3, 'Wed'),
+                          buildDayButton('수', 3, 'Wed'),
                           const SizedBox(width: 10),
-                          buildDayButton('목', dayButtonColor4, 4, 'Thu'),
+                          buildDayButton('목', 4, 'Thu'),
                           const SizedBox(width: 10),
-                          buildDayButton('금', dayButtonColor5, 5, 'Fri'),
+                          buildDayButton('금', 5, 'Fri'),
                           const SizedBox(width: 10),
-                          buildDayButton('토', dayButtonColor6, 6, 'Sat'),
+                          buildDayButton('토', 6, 'Sat'),
                         ],
                       ),
                       const SizedBox(height: 5),
@@ -252,17 +180,18 @@ class _MenuPageState extends State<MenuPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          buildMenuButton('조식', menuButtonColors[0], 1),
+                          buildMenuButton('조식', 1, 'breakfast'),
                           buildVerticalDivider(),
-                          buildMenuButton('중식', menuButtonColors[1], 2),
+                          buildMenuButton('중식', 2, 'lunch'),
                           buildVerticalDivider(),
-                          buildMenuButton('석식', menuButtonColors[2], 3),
+                          buildMenuButton('석식', 3, 'dinner'),
                         ],
                       ),
-                      Container(height: 340, child: dayMenuList)
+                      const SizedBox(height: 50),
+                      dayMenuList
                     ]),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 100),
                   SizedBox(
                     height: 205,
                     child: Column(children: [
@@ -395,48 +324,22 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  void updateDayMenuList(String dayOfWeek) {
-    setState(() {
-      dayMenuList = MenuListText(dayOfWeek: dayOfWeek);
-    });
-  }
+  // 요일 버튼 생성
+  Widget buildDayButton(String label, int dayButtonNumber, String dayOfWeek) {
+    final bool isSelected = dayButtonNumber == selectedDayButton;
 
-  Widget buildDayButton(
-      String label, Color dayButtonColor, int dayButtonNumber, String dayOfWeek) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          // DayButton이 선택되면 색상을 변경
-          dayButtonColor1 = dayButtonNumber == 1
-              ? const Color(0xFF862633)
-              : Colors.transparent;
-          dayButtonColor2 = dayButtonNumber == 2
-              ? const Color(0xFF862633)
-              : Colors.transparent;
-          dayButtonColor3 = dayButtonNumber == 3
-              ? const Color(0xFF862633)
-              : Colors.transparent;
-          dayButtonColor4 = dayButtonNumber == 4
-              ? const Color(0xFF862633)
-              : Colors.transparent;
-          dayButtonColor5 = dayButtonNumber == 5
-              ? const Color(0xFF862633)
-              : Colors.transparent;
-          dayButtonColor6 = dayButtonNumber == 6
-              ? const Color(0xFF862633)
-              : Colors.transparent;
-          dayButtonColor7 = dayButtonNumber == 7
-              ? const Color(0xFF862633)
-              : Colors.transparent;
+          selectedDayButton = dayButtonNumber;
+          updateDayMenuList(selectedDayButton, selectedMenuButton);
         });
-        // DayButton을 눌렀을 때, 해당 요일의 MenuListText 업데이트
-        updateDayMenuList(dayOfWeek);
       },
       child: Container(
         width: 25,
         height: 25,
         decoration: ShapeDecoration(
-          color: dayButtonColor,
+          color: isSelected ? const Color(0xFF862633) : Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -446,10 +349,7 @@ class _MenuPageState extends State<MenuPage> {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: dayButtonColor == Colors.transparent
-                  ? Colors.black // 버튼 색이 투명이면 검정색
-                  : Colors.white,
-              // 버튼 색이 흰색이면 흰색
+              color: isSelected ? Colors.white : Colors.black,
               fontSize: 15,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.w400,
@@ -461,18 +361,22 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
+  // 메뉴 버튼 생성
+  Widget buildMenuButton(String label, int menuButtonNumber, String menu) {
+    final bool isSelected = menuButtonNumber == selectedMenuButton;
 
-  Widget buildMenuButton(
-      String label, Color menuButtonColor, int menuButtonNumber) {
     return GestureDetector(
       onTap: () {
-        saveButtonColor(menuButtonNumber);
+        setState(() {
+          selectedMenuButton = menuButtonNumber;
+          updateDayMenuList(selectedDayButton, selectedMenuButton);
+        });
       },
       child: Container(
         width: 95,
         height: 35,
         decoration: ShapeDecoration(
-          color: menuButtonColor,
+          color: isSelected ? const Color(0xFF7B2D35) : Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -482,9 +386,7 @@ class _MenuPageState extends State<MenuPage> {
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: menuButtonColor == Colors.transparent
-                  ? const Color(0xFF000000)
-                  : const Color(0xFFFFFFFF),
+              color: isSelected ? Colors.white : const Color(0xFF000000),
               fontSize: 15,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.w400,
@@ -495,14 +397,47 @@ class _MenuPageState extends State<MenuPage> {
       ),
     );
   }
+}
 
-  Widget buildVerticalDivider() {
-    return Container(
-      height: 25,
-      width: 0.50,
-      color: Colors.black,
-    );
-  }
+Widget buildVerticalDivider() {
+  return Container(
+    height: 25,
+    width: 0.50,
+    color: Colors.black,
+  );
+}
+
+class MenuListText extends StatefulWidget {
+  final String dayOfWeek;
+  final String menu;
+
+  const MenuListText({Key? key, required this.dayOfWeek, required this.menu})
+      : super(key: key);
+
+  @override
+  State<MenuListText> createState() => _MenuListTextState();
+}
+
+class _MenuListTextState extends State<MenuListText> {
+  Map<String, Map<String, List<String>>> menuList = {
+    'Mon': {
+      'breakfast': ['쌀밥', '닭곰탕', '떡산적조림', '오이장아찌', '도시락김', '맛김치'],
+      'lunch': ['쌀밥', '어묵국', '두부구이&양념간장', '매콤콩나물무침', '마늘쫑지무침', '맛김치'],
+      'dinner': ['쌀밥', '근대된장국', '짜장불고기', '국물떡볶이', '쥐어채볶음', '맛김치']
+    },
+    'Tue': {
+      'breakfast': ['쌀밥', '순두부국', '동그랑땡전', '브로콜리참깨무침', '도시락김', '깍두기'],
+      'lunch': ['쌀밥', '미역국', '칠리탕수육', '멸치볶음', '쑥갓오이생채', '맛김치'],
+      'dinner': ['김치볶음밥', '두부계란국', '치킨까스*소스', '푸실리샐러드', '수제피클', '열무무침']
+    },
+    'Wed': {
+      'breakfast': ['쌀밥', '얼갈이된장국', '돈채버섯볶음', '두부조림', '도시락김', '맛김치'],
+      'lunch': ['쌀밥', '짬뽕국', '고추마요미트볼', '우엉잡채', '궁채장아찌', '맛김치'],
+      'dinner': ['쌀밥', '유부김치국', '꼬마돈까스&케찹', '빨간어묵볶음', '건파래볶음', '깍두기']
+    },
+    'Thu': {'breakfast': [], 'lunch': [], 'dinner': []},
+    'Fri': {'breakfast': [], 'lunch': [], 'dinner': []}
+  };
 
   Widget preparationImage() {
     return Column(
@@ -529,104 +464,41 @@ class _MenuPageState extends State<MenuPage> {
             ],
           ),
         ),
-        const SizedBox(height: 50)
       ],
     );
-  }
-}
-
-class MenuListText extends StatefulWidget {
-  final String dayOfWeek;
-
-  const MenuListText({super.key, required this.dayOfWeek});
-
-  @override
-  State<MenuListText> createState() => _MenuListTextState();
-}
-
-class _MenuListTextState extends State<MenuListText> {
-  Future<List<String>?> getMenuList(String dayOfWeek) async {
-    Map<int, String> day = {
-      0: 'Mon',
-      1: 'Tue',
-      2: 'Wed',
-      3: 'Thu',
-      4: 'Fri',
-    };
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    for (int i = 0; i <= 4; i++) {
-      final ref = FirebaseDatabase.instance.ref();
-      final menu =
-          await ref.child('교직원식당').child(day[i]!).once(DatabaseEventType.value);
-      if (menu.snapshot.value != null) {
-        List<String>? menuList = (menu.snapshot.value as List<dynamic>)
-            .map((e) => e.toString())
-            .toList();
-
-        // menuList를 로컬 캐시에 저장
-        await prefs.setStringList(day[i]!, menuList);
-      } else {
-        print('No data available.');
-      }
-    }
-
-    List<String>? storedMenu = prefs.getStringList(dayOfWeek);
-    if (storedMenu != null) {
-      return storedMenu;
-    } else {
-      return null;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<String>?>(
-      future: getMenuList(widget.dayOfWeek),
-      builder: (context, snapshot) {
-        var snapshotData = snapshot.data;
-        if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshotData == null) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('lib/images/dourourung.png', width: 200, height: 200),
-              RichText(
-                text: const TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '준비 중 입니',
-                      style: TextStyle(
-                          fontFamily: 'UhBeeSe_hyun',
-                          fontSize: 20,
-                          color: Color(0xFFF19A3D)),
+    if (menuList.containsKey(widget.dayOfWeek) &&
+        menuList[widget.dayOfWeek]![widget.menu]!.isNotEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (String menu in menuList[widget.dayOfWeek]![widget.menu]!)
+            Container(
+              width: 300,
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 5,
+                    height: 5,
+                    decoration: const ShapeDecoration(
+                      color: Color(0xFF7B2D35),
+                      shape: OvalBorder(),
                     ),
-                    TextSpan(
-                      text: '드르렁',
-                      style: TextStyle(
-                          fontFamily: 'UhBeeSe_hyun',
-                          fontSize: 20,
-                          color: Color(0xFF7B2D35)),
-                    ),
-                  ],
-                ),
+                    margin: const EdgeInsets.only(right: 10),
+                  ),
+                  Text(menu, style: const TextStyle(fontSize: 20)),
+                ],
               ),
-              const SizedBox(height: 50)
-            ],
-          );
-        } else {
-          List<String> menuList = snapshot.data ?? [];
-
-          return Column(
-            children: [
-              for (String menu in menuList) Text(menu, style: const TextStyle(fontSize: 17)),
-              const SizedBox(height: 40)
-            ],
-          );
-        }
-      },
-    );
+            ),
+        ],
+      );
+    } else {
+      return preparationImage();
+    }
   }
 }

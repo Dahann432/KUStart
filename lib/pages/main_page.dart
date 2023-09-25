@@ -61,7 +61,7 @@ class _SignInState extends State<MainPage> {
       body: WillPopScope(
         onWillPop: _onBackPressed,
         child: Container(
-          color: Colors.white,
+          color: Color.fromARGB(255, 245, 245, 245),
           height: screenHeight,
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -72,9 +72,9 @@ class _SignInState extends State<MainPage> {
                 child: Column(
                   children: [
                     ShuttleMain(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     MenuMain(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     CampusMapMain()
                   ],
                 ),

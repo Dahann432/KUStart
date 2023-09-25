@@ -16,10 +16,20 @@ class _MenuMainState extends State<MenuMain> {
   Color buttonColor3 = Colors.transparent;
   bool isFirstRun = true;
 
+  var dayMenuList;
+
   @override
   void initState() {
     super.initState();
     loadButtonColors();
+    initializeDayMenuList();
+  }
+
+  void initializeDayMenuList() {
+    final now = DateTime.now();
+    final dateFormat = DateFormat('E');
+    final currentDayOfWeek = dateFormat.format(now);
+    dayMenuList = MenuListText(dayOfWeek: currentDayOfWeek);
   }
 
   void loadButtonColors() async {
@@ -116,7 +126,7 @@ class _MenuMainState extends State<MenuMain> {
             ],
           ),
           const SizedBox(height: 25),
-          preparationImage()
+          dayMenuList
         ],
       ),
     );
@@ -162,6 +172,25 @@ class _MenuMainState extends State<MenuMain> {
       color: Colors.black,
     );
   }
+}
+
+class MenuListText extends StatefulWidget {
+  final String dayOfWeek;
+
+  const MenuListText({Key? key, required this.dayOfWeek}) : super(key: key);
+
+  @override
+  State<MenuListText> createState() => _MenuListTextState();
+}
+
+class _MenuListTextState extends State<MenuListText> {
+  Map<String, List<String>> menuList = {
+    'Mon': ['쌀밥', '순두부백탕', '파채산적조림', '새송이볶음', '얼갈이된장무침', '맛김치'],
+    'Tue': ['쌀밥', '콩나물국', '돈육고추장불고기', '한식잡채', '브로콜리참깨무침', '맛김치'],
+    'Wed': ['시래기나물밥*양념간장', '사골만두국', '생선까스*타르타르소스', '건파래볶음', '궁채장아찌', '맛김치'],
+    'Thu': ['쌀밥', '수제비국', '순대닭볶음', '만두&춘권튀김', '숙주나물', '맛김치'],
+    'Fri': ['쌀밥', '계란파국', '마파두부', '난자완스', '해초오이무침', '맛김치'],
+  };
 
   Widget preparationImage() {
     return Column(
@@ -192,73 +221,34 @@ class _MenuMainState extends State<MenuMain> {
       ],
     );
   }
-}
-
-class MenuListText extends StatefulWidget {
-  final String dayOfWeek;
-
-  const MenuListText({super.key, required this.dayOfWeek});
-
-  @override
-  State<MenuListText> createState() => _MenuListTextState();
-}
-
-class _MenuListTextState extends State<MenuListText> {
-  Future<List<String>> getMenuList(String dayOfWeek) async {
-    Map<int, String> day = {
-      0: 'Mon',
-      1: 'Tue',
-      2: 'Wed',
-      3: 'Thu',
-      4: 'Fri',
-    };
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    for (int i = 0; i <= 4; i++) {
-      final ref = FirebaseDatabase.instance.ref();
-      final menu =
-          await ref.child('교직원식당').child(day[i]!).once(DatabaseEventType.value);
-      if (menu.snapshot.value != null) {
-        List<String>? menuList = (menu.snapshot.value as List<dynamic>)
-            .map((e) => e.toString())
-            .toList();
-
-        // menuList를 로컬 캐시에 저장
-        await prefs.setStringList(day[i]!, menuList);
-      } else {
-        print('No data available.');
-      }
-    }
-
-    List<String>? storedMenu = prefs.getStringList(dayOfWeek);
-    if (storedMenu != null) {
-      return storedMenu;
-    } else {
-      return [];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: getMenuList(widget.dayOfWeek),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          List<String> menuList = snapshot.data ?? [];
-
-          return Column(
-            children: [
-              for (String menu in menuList) Text(menu),
-              const SizedBox(height: 50)
-            ],
-          );
-        }
-      },
-    );
+    if (menuList.containsKey(widget.dayOfWeek)) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (String menu in menuList[widget.dayOfWeek]!)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 5,
+                  height: 5,
+                  decoration: const ShapeDecoration(
+                    color: Color(0xFF7B2D35),
+                    shape: OvalBorder(),
+                  ),
+                  margin: const EdgeInsets.only(right: 10),
+                ),
+                Text(menu, style: const TextStyle(fontSize: 20)),
+              ],
+            ),
+          const SizedBox(height: 40)
+        ],
+      );
+    } else {
+      return preparationImage();
+    }
   }
 }
