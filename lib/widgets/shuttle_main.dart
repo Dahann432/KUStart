@@ -217,7 +217,7 @@ class _ToStationState extends State<ToStation> {
   String remainingTime = '운행 종료';
 
   // 시간표 정보
-  final Map<int, List<int>> schedule = {
+  final Map<int, List<int>> scheduleWeekday = {
     8: [50],
     9: [10, 30, 40, 50],
     10: [10, 30, 40],
@@ -231,6 +231,14 @@ class _ToStationState extends State<ToStation> {
     18: [0, 20],
     19: [0, 30],
     20: [0, 30, 50],
+  };
+
+  final Map<int, List<int>> scheduleSunday = {
+    17: [0, 40],
+    18: [40],
+    19: [0, 40],
+    20: [20],
+    21: [10],
   };
 
   @override
@@ -263,7 +271,7 @@ class _ToStationState extends State<ToStation> {
         biggerText = true;
         remainingTime = '$hours 시간 남음';
       });
-    } else if (remainingDuration.inSeconds < 60) {
+    } else if (remainingDuration.inSeconds < 60 && remainingDuration.inSeconds >= 0) {
       setState(() {
         biggerText = true;
         remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
@@ -279,10 +287,20 @@ class _ToStationState extends State<ToStation> {
   }
 
   bool isScheduleOver() {
-    if (schedule.isEmpty) return true;
+    Map<int, List<int>> scheduleToUse;
 
-    int lastKey = schedule.keys.reduce((a, b) => a > b ? a : b);
-    int lastValue = schedule[lastKey]?.reduce((a, b) => a > b ? a : b) ?? 0;
+    int currentDay = now.weekday;
+    if (currentDay == DateTime.sunday) {
+      scheduleToUse = scheduleSunday;
+    } else {
+      scheduleToUse = scheduleWeekday;
+    }
+
+    if (scheduleToUse.isEmpty) return true;
+
+    int lastKey = scheduleToUse.keys.reduce((a, b) => a > b ? a : b);
+    int lastValue =
+        scheduleToUse[lastKey]?.reduce((a, b) => a > b ? a : b) ?? 0;
 
     int currentHour = now.hour;
     int currentMinute = now.minute;
@@ -297,7 +315,16 @@ class _ToStationState extends State<ToStation> {
     int closestHour = currentHour;
     int closestMinute = 0;
 
-    List<int> minutesList = schedule[currentHour] ?? [];
+    Map<int, List<int>> scheduleToUse;
+
+    int currentDay = now.weekday;
+    if (currentDay == DateTime.sunday) {
+      scheduleToUse = scheduleSunday;
+    } else {
+      scheduleToUse = scheduleWeekday;
+    }
+
+    List<int> minutesList = scheduleToUse[currentHour] ?? [];
 
     if (minutesList.isNotEmpty) {
       int minDifference = 60;
@@ -315,10 +342,10 @@ class _ToStationState extends State<ToStation> {
         closestMinute = minutesList[0];
       }
     } else {
-      while (!schedule.containsKey(closestHour)) {
+      while (!scheduleToUse.containsKey(closestHour)) {
         closestHour++;
         closestMinute = 0;
-        if (schedule.containsKey(closestHour)) {
+        if (scheduleToUse.containsKey(closestHour)) {
           closestMinute = 50;
         }
       }
@@ -366,7 +393,7 @@ class _ToCampusState extends State<ToCampus> {
   bool biggerText = true;
   String remainingTime = '운행 종료';
 
-  final Map<int, List<int>> schedule = {
+  final Map<int, List<int>> scheduleWeekday = {
     8: [20, 30, 40, 50],
     9: [0, 20, 40, 50],
     10: [0, 20, 40, 50],
@@ -381,6 +408,15 @@ class _ToCampusState extends State<ToCampus> {
     19: [10, 40],
     20: [10, 40],
     21: [0],
+  };
+
+  final Map<int, List<int>> scheduleSunday = {
+    16: [40],
+    17: [10, 50],
+    18: [50],
+    19: [10, 50],
+    20: [35],
+    21: [20],
   };
 
   @override
@@ -413,7 +449,7 @@ class _ToCampusState extends State<ToCampus> {
         biggerText = true;
         remainingTime = '$hours 시간 남음';
       });
-    } else if (remainingDuration.inSeconds < 60) {
+    } else if (remainingDuration.inSeconds < 60 && remainingDuration.inSeconds >= 0) {
       setState(() {
         biggerText = true;
         remainingTime = '곧 출발쓰'; // 1분 이내 출발일 경우 메시지 변경
@@ -429,10 +465,20 @@ class _ToCampusState extends State<ToCampus> {
   }
 
   bool isScheduleOver() {
-    if (schedule.isEmpty) return true;
+    Map<int, List<int>> scheduleToUse;
 
-    int lastKey = schedule.keys.reduce((a, b) => a > b ? a : b);
-    int lastValue = schedule[lastKey]?.reduce((a, b) => a > b ? a : b) ?? 0;
+    int currentDay = now.weekday;
+    if (currentDay == DateTime.sunday) {
+      scheduleToUse = scheduleSunday;
+    } else {
+      scheduleToUse = scheduleWeekday;
+    }
+
+    if (scheduleToUse.isEmpty) return true;
+
+    int lastKey = scheduleToUse.keys.reduce((a, b) => a > b ? a : b);
+    int lastValue =
+        scheduleToUse[lastKey]?.reduce((a, b) => a > b ? a : b) ?? 0;
 
     int currentHour = now.hour;
     int currentMinute = now.minute;
@@ -447,7 +493,16 @@ class _ToCampusState extends State<ToCampus> {
     int closestHour = currentHour;
     int closestMinute = 0;
 
-    List<int> minutesList = schedule[currentHour] ?? [];
+    Map<int, List<int>> scheduleToUse;
+
+    int currentDay = now.weekday;
+    if (currentDay == DateTime.sunday) {
+      scheduleToUse = scheduleSunday;
+    } else {
+      scheduleToUse = scheduleWeekday;
+    }
+
+    List<int> minutesList = scheduleToUse[currentHour] ?? [];
 
     if (minutesList.isNotEmpty) {
       int minDifference = 60;
@@ -465,11 +520,11 @@ class _ToCampusState extends State<ToCampus> {
         closestMinute = minutesList[0];
       }
     } else {
-      while (!schedule.containsKey(closestHour)) {
+      while (!scheduleToUse.containsKey(closestHour)) {
         closestHour++;
         closestMinute = 0;
-        if (schedule.containsKey(closestHour)) {
-          closestMinute = 20;
+        if (scheduleToUse.containsKey(closestHour)) {
+          closestMinute = 50;
         }
       }
     }

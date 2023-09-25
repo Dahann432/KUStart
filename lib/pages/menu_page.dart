@@ -99,14 +99,19 @@ class _MenuPageState extends State<MenuPage> {
               child: Column(
                 children: [
                   Container(
-                    height: 500,
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        side: const BorderSide(
-                            width: 1, color: Color(0xFF6F6F6F)),
                         borderRadius: BorderRadius.circular(20),
                       ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x3F000000),
+                          blurRadius: 0.5,
+                          offset: Offset(0, 0),
+                          spreadRadius: 0.5,
+                        )
+                      ],
                     ),
                     child: Column(children: [
                       Padding(
@@ -188,7 +193,8 @@ class _MenuPageState extends State<MenuPage> {
                         ],
                       ),
                       const SizedBox(height: 50),
-                      dayMenuList
+                      dayMenuList,
+                      const SizedBox(height: 50)
                     ]),
                   ),
                   const SizedBox(height: 100),
