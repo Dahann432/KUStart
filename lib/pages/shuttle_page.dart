@@ -11,7 +11,8 @@ class ShuttlePage extends StatefulWidget {
 
 class _ShuttlePageState extends State<ShuttlePage> {
   var directionIcon = const Icon(Icons.east);
-  late Widget timelineWidget = buildShuttleTimeline(scheduleToCampus);
+  late Widget weekdayTimelineWidget = buildShuttleTimeline(scheduleToCampusWeekday, true);
+  late Widget sundayTimelineWidget = buildShuttleTimeline(scheduleToCampusSunday, false);
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +76,16 @@ class _ShuttlePageState extends State<ShuttlePage> {
                           // Toggle the container color
                           if (directionIcon.icon == Icons.east) {
                             directionIcon = Icon(Icons.west);
-                            timelineWidget =
-                                buildShuttleTimeline(scheduleToStation);
+                            weekdayTimelineWidget =
+                                buildShuttleTimeline(scheduleToStationWeekday, true);
+                            sundayTimelineWidget =
+                                buildShuttleTimeline(scheduleToStationSunday, false);
                           } else {
                             directionIcon = Icon(Icons.east);
-                            timelineWidget =
-                                buildShuttleTimeline(scheduleToCampus);
+                            weekdayTimelineWidget =
+                                buildShuttleTimeline(scheduleToCampusWeekday, true);
+                            sundayTimelineWidget =
+                                buildShuttleTimeline(scheduleToCampusSunday, false);
                           }
                         });
                       },
@@ -118,6 +123,8 @@ class _ShuttlePageState extends State<ShuttlePage> {
                     const SizedBox(width: 15)
                   ]),
                   const SizedBox(height: 30),
+
+                  // 주중 셔틀 시간표
                   Container(
                     decoration: const ShapeDecoration(
                       shape: RoundedRectangleBorder(
@@ -152,7 +159,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
                       ),
                     ),
                   ),
-                  timelineWidget,
+                  weekdayTimelineWidget,
                   const SizedBox(height: 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +185,45 @@ class _ShuttlePageState extends State<ShuttlePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30)
+                  const SizedBox(height: 40),
+
+                  // 일요일 셔틀 시간표
+                  Container(
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          width: 1,
+                          strokeAlign: BorderSide.strokeAlignCenter,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    '일요일',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          width: 1,
+                          strokeAlign: BorderSide.strokeAlignCenter,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                      ),
+                    ),
+                  ),
+                  sundayTimelineWidget,
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
@@ -219,7 +264,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
   }
 
   // 조치원역 방향 시간표
-  final Map<int, List<int>> scheduleToStation = {
+  final Map<int, List<int>> scheduleToStationWeekday = {
     8: [50],
     9: [10, 30, 40, 50],
     10: [10, 30, 40],
@@ -235,8 +280,16 @@ class _ShuttlePageState extends State<ShuttlePage> {
     20: [0, 30, 50],
   };
 
+  final Map<int, List<int>> scheduleToStationSunday = {
+    17: [0, 40],
+    18: [40],
+    19: [0, 40],
+    20: [20],
+    21: [10],
+  };
+
   // 고려대 방향 시간표
-  final Map<int, List<int>> scheduleToCampus = {
+  final Map<int, List<int>> scheduleToCampusWeekday = {
     8: [20, 30, 40, 50],
     9: [0, 20, 40, 50],
     10: [0, 20, 40, 50],
@@ -253,13 +306,22 @@ class _ShuttlePageState extends State<ShuttlePage> {
     21: [0],
   };
 
+  final Map<int, List<int>> scheduleToCampusSunday = {
+    16: [40],
+    17: [10, 50],
+    18: [50],
+    19: [10, 50],
+    20: [35],
+    21: [20],
+  };
+
   // 시간 formatting
   String formatTime(int time) {
     return time.toString().padLeft(2, '0');
   }
 
   // 시간별 셔틀 타임라인 위젯
-  Widget buildShuttleTimeline(Map<int, List<int>> schedule) {
+  Widget buildShuttleTimeline(Map<int, List<int>> schedule, bool isWeekday) {
     // 시간별 셔틀 타임라인 위젯 목록을 저장할 리스트
     List<Widget> timelineWidgets = [const SizedBox(height: 15)];
     bool fridayTimeline = false;
@@ -269,7 +331,7 @@ class _ShuttlePageState extends State<ShuttlePage> {
       List<Widget> minuteWidgets = [];
 
       // 금요일 시간표
-      if (hour == 19 || hour == 20 || hour == 21) {
+      if ((hour == 19 || hour == 20 || hour == 21) && isWeekday) {
         fridayTimeline = true;
       }
 
