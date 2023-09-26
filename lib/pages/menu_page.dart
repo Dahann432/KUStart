@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:kustart/responsive/breakpoint.dart';
 import 'package:kustart/responsive/responsive_center.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -11,8 +15,8 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  int selectedDayButton = 1; // 선택한 요일 버튼 초기화
-  int selectedMenuButton = 1; // 선택한 메뉴 버튼 초기화
+  String selectedDayButton = 'Mon'; // 선택한 요일 버튼 초기화
+  String selectedMenuButton = 'breakfast'; // 선택한 메뉴 버튼 초기화
 
   var dayMenuList;
 
@@ -23,31 +27,20 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   void initializeDayMenuList() {
+
     final now = DateTime.now();
     final dateFormat = DateFormat('E');
     final currentDayOfWeek = dateFormat.format(now);
-    dayMenuList = MenuListText(dayOfWeek: currentDayOfWeek, menu: 'lunch');
+    dayMenuList = MenuListText(dayOfWeek: currentDayOfWeek, menu: 'breakfast');
+    selectedDayButton = currentDayOfWeek;
   }
 
-  void updateDayMenuList(int selectedDayButton, int selectedMenuButton) {
-    Map<int, String> dayOfWeek = {
-      7: 'Sun',
-      1: 'Mon',
-      2: 'Tue',
-      3: 'Wed',
-      4: 'Thu',
-      5: 'Fri',
-      6: 'Sat'
-    };
-
-    Map<int, String> menu = {
-      1: 'breakfast',
-      2: 'lunch',
-      3: 'dinner',
-    };
+  void updateDayMenuList(String selectedDayButton, String selectedMenuButton) {
 
     setState(() {
-      dayMenuList = MenuListText(dayOfWeek: dayOfWeek[selectedDayButton]!, menu: menu[selectedMenuButton]!);
+      dayMenuList = MenuListText(
+          dayOfWeek: selectedDayButton,
+          menu: selectedMenuButton);
     });
   }
 
@@ -154,19 +147,19 @@ class _MenuPageState extends State<MenuPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          buildDayButton('일', 7, 'Sun'),
+                          buildDayButton('일', 'Sun'),
                           const SizedBox(width: 10),
-                          buildDayButton('월', 1, 'Mon'),
+                          buildDayButton('월', 'Mon'),
                           const SizedBox(width: 10),
-                          buildDayButton('화', 2, 'Tue'),
+                          buildDayButton('화', 'Tue'),
                           const SizedBox(width: 10),
-                          buildDayButton('수', 3, 'Wed'),
+                          buildDayButton('수', 'Wed'),
                           const SizedBox(width: 10),
-                          buildDayButton('목', 4, 'Thu'),
+                          buildDayButton('목', 'Thu'),
                           const SizedBox(width: 10),
-                          buildDayButton('금', 5, 'Fri'),
+                          buildDayButton('금', 'Fri'),
                           const SizedBox(width: 10),
-                          buildDayButton('토', 6, 'Sat'),
+                          buildDayButton('토', 'Sat'),
                         ],
                       ),
                       const SizedBox(height: 5),
@@ -185,11 +178,11 @@ class _MenuPageState extends State<MenuPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          buildMenuButton('조식', 1, 'breakfast'),
+                          buildMenuButton('조식', 'breakfast'),
                           buildVerticalDivider(),
-                          buildMenuButton('중식', 2, 'lunch'),
+                          buildMenuButton('중식', 'lunch'),
                           buildVerticalDivider(),
-                          buildMenuButton('석식', 3, 'dinner'),
+                          buildMenuButton('석식', 'dinner'),
                         ],
                       ),
                       const SizedBox(height: 50),
@@ -331,13 +324,13 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   // 요일 버튼 생성
-  Widget buildDayButton(String label, int dayButtonNumber, String dayOfWeek) {
-    final bool isSelected = dayButtonNumber == selectedDayButton;
+  Widget buildDayButton(String label, String dayOfWeek) {
+    final bool isSelected = dayOfWeek == selectedDayButton;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedDayButton = dayButtonNumber;
+          selectedDayButton = dayOfWeek;
           updateDayMenuList(selectedDayButton, selectedMenuButton);
         });
       },
@@ -368,13 +361,13 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   // 메뉴 버튼 생성
-  Widget buildMenuButton(String label, int menuButtonNumber, String menu) {
-    final bool isSelected = menuButtonNumber == selectedMenuButton;
+  Widget buildMenuButton(String label, String menu) {
+    final bool isSelected = menu == selectedMenuButton;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedMenuButton = menuButtonNumber;
+          selectedMenuButton = menu;
           updateDayMenuList(selectedDayButton, selectedMenuButton);
         });
       },
@@ -417,7 +410,7 @@ class MenuListText extends StatefulWidget {
   final String dayOfWeek;
   final String menu;
 
-  const MenuListText({Key? key, required this.dayOfWeek, required this.menu})
+  MenuListText({Key? key, required this.dayOfWeek, required this.menu})
       : super(key: key);
 
   @override
@@ -425,25 +418,87 @@ class MenuListText extends StatefulWidget {
 }
 
 class _MenuListTextState extends State<MenuListText> {
+  final databaseReference = FirebaseDatabase.instance.ref();
+  Map<String, dynamic> jsonData = {};
+  final String dataKey = 'firebaseData';
+  bool isDataLoaded = false;
+
   Map<String, Map<String, List<String>>> menuList = {
     'Mon': {
-      'breakfast': ['쌀밥', '닭곰탕', '떡산적조림', '오이장아찌', '도시락김', '맛김치'],
-      'lunch': ['쌀밥', '어묵국', '두부구이&양념간장', '매콤콩나물무침', '마늘쫑지무침', '맛김치'],
-      'dinner': ['쌀밥', '근대된장국', '짜장불고기', '국물떡볶이', '쥐어채볶음', '맛김치']
+      'breakfast': [],
+      'lunch': [],
+      'dinner': [],
     },
     'Tue': {
-      'breakfast': ['쌀밥', '순두부국', '동그랑땡전', '브로콜리참깨무침', '도시락김', '깍두기'],
-      'lunch': ['쌀밥', '미역국', '칠리탕수육', '멸치볶음', '쑥갓오이생채', '맛김치'],
-      'dinner': ['김치볶음밥', '두부계란국', '치킨까스*소스', '푸실리샐러드', '수제피클', '열무무침']
+      'breakfast': [],
+      'lunch': [],
+      'dinner': [],
     },
     'Wed': {
-      'breakfast': ['쌀밥', '얼갈이된장국', '돈채버섯볶음', '두부조림', '도시락김', '맛김치'],
-      'lunch': ['쌀밥', '짬뽕국', '고추마요미트볼', '우엉잡채', '궁채장아찌', '맛김치'],
-      'dinner': ['쌀밥', '유부김치국', '꼬마돈까스&케찹', '빨간어묵볶음', '건파래볶음', '깍두기']
+      'breakfast': [],
+      'lunch': [],
+      'dinner': [],
     },
-    'Thu': {'breakfast': [], 'lunch': [], 'dinner': []},
-    'Fri': {'breakfast': [], 'lunch': [], 'dinner': []}
+    'Thu': {
+      'breakfast': [],
+      'lunch': [],
+      'dinner': [],
+    },
+    'Fri': {
+      'breakfast': [],
+      'lunch': [],
+      'dinner': [],
+    },
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    if (!isDataLoaded) {
+      // Firebase에서 데이터 가져오기
+      final dataSnapshot = await databaseReference.child('학생식당').once();
+
+      if (dataSnapshot.snapshot.value != null) {
+        final dynamic data = dataSnapshot.snapshot.value;
+        if (data is Map<String, dynamic>) {
+          setState(() {
+            jsonData = data;
+            isDataLoaded = true;
+          });
+
+          // Firebase에서 가져온 데이터를 로컬 캐시에 저장
+          await _saveDataToLocalCache();
+        }
+      }
+    } else {
+      // 이미 데이터를 가져온 경우 로컬 캐시에서 데이터 불러오기
+      await _loadDataFromLocalCache();
+    }
+  }
+
+  Future<void> _saveDataToLocalCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonDataString = json.encode(menuList);
+    await prefs.setString(dataKey, jsonDataString);
+  }
+
+  Future<void> _loadDataFromLocalCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonDataString = prefs.getString(dataKey);
+
+    if (jsonDataString != null) {
+      final decodedData = json.decode(jsonDataString);
+      if (decodedData is Map<String, dynamic>) {
+        setState(() {
+          jsonData = decodedData;
+        });
+      }
+    }
+  }
 
   Widget preparationImage() {
     return Column(
@@ -476,12 +531,12 @@ class _MenuListTextState extends State<MenuListText> {
 
   @override
   Widget build(BuildContext context) {
-    if (menuList.containsKey(widget.dayOfWeek) &&
-        menuList[widget.dayOfWeek]![widget.menu]!.isNotEmpty) {
+    if (jsonData.containsKey(widget.dayOfWeek) &&
+        jsonData[widget.dayOfWeek]![widget.menu]!.isNotEmpty) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          for (String menu in menuList[widget.dayOfWeek]![widget.menu]!)
+          for (String menu in jsonData[widget.dayOfWeek]![widget.menu]!)
             Container(
               width: 300,
               padding: const EdgeInsets.only(bottom: 10),
@@ -508,3 +563,9 @@ class _MenuListTextState extends State<MenuListText> {
     }
   }
 }
+
+
+
+
+
+
